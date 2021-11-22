@@ -27,10 +27,10 @@ steps:
     backendType: 'azurerm'
     backendServiceArm: 'azure-resource-manager-service-connection'
     ensureBackend: true
-    backendAzureRmResourceGroupName: 'terraform-backeng-rg'
+    backendAzureRmResourceGroupName: 'zeknterraform-backeng-rg'
     backendAzureRmResourceGroupLocation: 'westeurope'
-    backendAzureRmStorageAccountName: 'terraformbackendstorage'
+    backendAzureRmStorageAccountName: 'zeknterraformbackendstorage'
     backendAzureRmStorageAccountSku: 'Standard_LRS'
-    backendAzureRmContainerName: 'terraformbackendcontainer'
-    backendAzureRmKey: 'k8s-dev.tfstate'
+    backendAzureRmContainerName: 'zeknterraformbackendcontainer'
+    backendAzureRmKey: 'zekn-k8s-dev.tfstate'
     allowTelemetryCollection: true
