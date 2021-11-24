@@ -20,6 +20,8 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
+#create docker image 
+#upload docker image  to the Docker hub.    
     - task: Docker@2
       displayName: Build an image
       inputs:
@@ -28,3 +30,43 @@ stages:
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: '$(tag)'
+
+#build and publish artifact.  
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'manifest'
+        publishLocation: 'Container'
+
+- stage: Deploy
+  displayName: Deploy image
+  jobs:
+  - job: Deploy
+    displayName: Deploy
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+
+#download YAML, YML artifact files 
+#from manifest package, which created previously
+#to System.ArtifactsDirectory
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'manifest'
+        itemPattern: |
+          **/*.yaml
+          **/*.yml
+        targetPath: '$(System.ArtifactsDirectory)'
+
+#deploy to kubernetes using previously downloaded yaml, yml files
+#in this case will be used deployment.yaml file
+#moreover will be used zekn/azure_devops:${tag} image
+#tag is = build id
+    - task: KubernetesManifest@0
+      inputs:
+        action: 'deploy'
+        kubernetesServiceConnection: 'azure-k8s-connection'
+        namespace: 'default'
+        manifests: '$(System.ArtifactsDirectory)/deployment.yaml'
+        containers: 'zekn/azure_devops:${tag}'
