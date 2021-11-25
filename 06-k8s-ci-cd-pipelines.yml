@@ -69,6 +69,9 @@ stages:
 #in this case will be used deployment.yaml file
 #moreover will be used zekn/azure_devops:${tag} image
 #tag is = build id
+#The fully qualified URL of the image to be used for substitutions on the manifest files
+# all references  are searched for in the image field of the input manifest files. 
+#For each match found, the tag replaces the matched reference.
     - task: KubernetesManifest@0
       inputs:
         action: 'deploy'
